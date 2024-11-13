@@ -158,7 +158,8 @@ public class AESFileEncryptor {
             System.out.print(">> ");
             Scanner sc = new Scanner(System.in);
             int menu = sc.nextInt();
-
+            sc.close();
+            
             if(menu==1) {
                 // txt 암호화
                 encryptor.encryptText(txtPath);

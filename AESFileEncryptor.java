@@ -5,6 +5,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Base64;
+import java.util.Scanner;
 
 public class AESFileEncryptor {
     private SecretKey secretKey;
@@ -152,22 +153,29 @@ public class AESFileEncryptor {
             // Step 2: 암호화 복호화 테스트
             AESFileEncryptor encryptor = new AESFileEncryptor(secretKey);
 
-            // txt 암호화
-            //encryptor.encryptText(txtPath);
-            //System.out.println("Text File encrypted successfully: " + txtPath);
+            System.out.println("1. 암호화");
+            System.out.println("2. 복호화");
+            System.out.print(">> ");
+            Scanner sc = new Scanner(System.in);
+            int menu = sc.nextInt();
 
-            // txt 복호화
-            encryptor.decryptText(txtPath);
-            System.out.println("Text File decrypted successfully: " + txtPath);
+            if(menu==1) {
+                // txt 암호화
+                encryptor.encryptText(txtPath);
+                System.out.println("Text File encrypted successfully: " + txtPath);
+                // csv 암호화
+                encryptor.encryptCSV(csvPath);
+                System.out.println("CSV File encrypted successfully: " + csvPath);
+            }
 
-
-            // csv 암호화
-            //encryptor.encryptCSV(csvPath);
-            //System.out.println("CSV File encrypted successfully: " + csvPath);
-
-            // csv 복호화
-            encryptor.decryptCSV(csvPath);
-            System.out.println("CSV File decrypted successfully: " + csvPath);
+            if(menu==2) {
+                // txt 복호화
+                encryptor.decryptText(txtPath);
+                System.out.println("Text File decrypted successfully: " + txtPath);
+                // csv 복호화
+                encryptor.decryptCSV(csvPath);
+                System.out.println("CSV File decrypted successfully: " + csvPath);
+            }
 
         } catch (Exception e) {
             System.out.println("Error Msg: " + e.getMessage());

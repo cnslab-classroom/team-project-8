@@ -1,187 +1,81 @@
 package src;
 import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Base64;
-import java.util.Scanner;
 
 public class AESFileEncryptor {
-    private SecretKey secretKey;
+    private final String keyFilePath; // 암호화 키를 저장할 파일 경로
+    private final SecretKey secretKey; // 고정된 AES 암호화 키
 
-    public AESFileEncryptor(SecretKey key) {
-        this.secretKey = key;
+    // 생성자: 암호화 키 파일 경로를 전달받음
+    public AESFileEncryptor(String keyFilePath) throws Exception {
+        this.keyFilePath = keyFilePath;
+        this.secretKey = validateAndSetKey(); // 키 파일 검증 및 설정
     }
 
-    public AESFileEncryptor() throws Exception {
-        this.secretKey = generateKey();
-    }
-
-    // 새로운 AES 키 생성
-    public SecretKey generateKey() throws Exception {
-        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-        keyGen.init(256); // Use 256-bit AES encryption
-        return keyGen.generateKey();
-    }
-
-    // 파일에 키 저장
-    public void saveKey(String keyFile) throws Exception {
-        String encodedKey = Base64.getEncoder().encodeToString(secretKey.getEncoded());
-        try (FileWriter writer = new FileWriter(keyFile)) {
-            writer.write(encodedKey);
+    // AES 키 검증 및 설정
+    private SecretKey validateAndSetKey() throws Exception {
+        // 환경변수에서 고정된 키 가져오기
+        String fixedKey = System.getenv("ENCRYPTION_KEY");      //환경변수에 고정된 키값 설정해줘야함.
+        if (fixedKey == null || fixedKey.length() != 32) {
+            throw new IllegalArgumentException("Invalid or missing encryption key in environment variable.");
         }
-    }
+        byte[] fixedKeyBytes = fixedKey.getBytes();
+        SecretKey fixedSecretKey = new SecretKeySpec(fixedKeyBytes, "AES");
 
-    // 파일로부터 키 불러오기
-    public static SecretKey loadKey(String keyFile) throws Exception {
-        String encodedKey = new String(Files.readAllBytes(new File(keyFile).toPath()));
-        byte[] decodedKey = Base64.getDecoder().decode(encodedKey);
-        return new SecretKeySpec(decodedKey, 0, decodedKey.length, "AES");
-    }
+        // 키 파일 로드
+        File keyFile = new File(keyFilePath);
+        if (!keyFile.exists()) {
+            throw new FileNotFoundException("The key file " + keyFilePath + " does not exist.");
+        }
+        String encodedKey = new String(Files.readAllBytes(keyFile.toPath()));
 
-    // 텍스트 파일 내용 암호화
-    public void encryptText(String txtFilePath) throws Exception {
-        File txtFile = new File(txtFilePath);
-        if (!txtFile.exists()) {
-            throw new FileNotFoundException("The TXT file does not exist: " + txtFilePath);
+        String fixedKeyEncoded = Base64.getEncoder().encodeToString(fixedKeyBytes);
+
+        if (!fixedKeyEncoded.equals(encodedKey)) {
+            throw new SecurityException("The provided key file does not match the fixed encryption key.");
         }
 
-        byte[] fileContent = Files.readAllBytes(txtFile.toPath());
-        System.out.println("Original file size: " + fileContent.length);
+        System.out.println("Encryption key validated and set successfully.");
+        return fixedSecretKey; // 검증된 고정 키를 secretKey로 설정
+    }
 
+    // 파일 암호화
+    public void encryptFile(String filePath) throws Exception {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new FileNotFoundException("The file does not exist: " + filePath);
+        }
+
+        byte[] fileContent = Files.readAllBytes(file.toPath());
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
         byte[] encryptedContent = cipher.doFinal(fileContent);
 
-        System.out.println("Encrypted file size: " + encryptedContent.length);
-
-        try (FileOutputStream fos = new FileOutputStream(txtFilePath)) {
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
             fos.write(encryptedContent);
         }
+        System.out.println("File encrypted successfully: " + filePath);
     }
 
-    // 텍스트 파일 내용 복호화
-    public void decryptText(String txtFilePath) throws Exception {
-        File txtFile = new File(txtFilePath);
-        if (!txtFile.exists()) {
-            throw new FileNotFoundException("The TXT file does not exist: " + txtFilePath);
+    // 파일 복호화
+    public void decryptFile(String filePath) throws Exception {
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new FileNotFoundException("The file does not exist: " + filePath);
         }
 
-        byte[] fileContent = Files.readAllBytes(txtFile.toPath());
-        System.out.println("Encrypted file size: " + fileContent.length);
-
+        byte[] fileContent = Files.readAllBytes(file.toPath());
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
         byte[] decryptedContent = cipher.doFinal(fileContent);
 
-        System.out.println("Decrypted file size: " + decryptedContent.length);
-
-        try (FileOutputStream fos = new FileOutputStream(txtFilePath)) {
+        try (FileOutputStream fos = new FileOutputStream(filePath)) {
             fos.write(decryptedContent);
         }
-    }
-
-    // CSV 파일 내용 암호화
-    public void encryptCSV(String csvFilePath) throws Exception {
-        File csvFile = new File(csvFilePath);
-        if (!csvFile.exists()) {
-            throw new FileNotFoundException("The CSV file does not exist: " + csvFilePath);
-        }
-    
-        // csv 파일 내용 읽기
-        byte[] fileContent = Files.readAllBytes(csvFile.toPath());
-        System.out.println("Original file size: " + fileContent.length);
-    
-        // 내용 암호화
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-        byte[] encryptedContent = cipher.doFinal(fileContent);
-        System.out.println("Encrypted file size: " + encryptedContent.length);
-    
-        // 파일에 암호화된 내용 다시 쓰기
-        try (FileOutputStream fos = new FileOutputStream(csvFilePath)) {
-            fos.write(encryptedContent);
-        }
-    }
-
-        // CSV 파일 내용 복호화
-    public void decryptCSV(String csvFilePath) throws Exception {
-        File csvFile = new File(csvFilePath);
-        if (!csvFile.exists()) {
-            throw new FileNotFoundException("The CSV file does not exist: " + csvFilePath);
-        }
-    
-        // 암호화된 내용 읽기
-        byte[] fileContent = Files.readAllBytes(csvFile.toPath());
-        System.out.println("Encrypted file size: " + fileContent.length);
-    
-        // 내용 복호화
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
-        byte[] decryptedContent = cipher.doFinal(fileContent);
-        System.out.println("Decrypted file size: " + decryptedContent.length);
-    
-        // 파일에 복호화된 내용 다시 쓰기
-        try (FileOutputStream fos = new FileOutputStream(csvFilePath)) {
-            fos.write(decryptedContent);
-        }
-    }
-    
-
-    // Main method for testing
-    public static void testAESFileEncryptor() {
-        String keyFilePath = ".\\src\\aes_key.txt"; // AES 키 저장할 파일 경로
-        String txtPath = "ItemList.txt"; // 대상 텍스트 파일
-        String csvPath = "ItemList.csv"; // 대상 csv 파일
-
-        try {
-            // Step 1: AES 키 로드하거나 생성
-            SecretKey secretKey;
-            File keyFile = new File(keyFilePath);
-
-            if (keyFile.exists()) {
-                secretKey = AESFileEncryptor.loadKey(keyFilePath);
-                System.out.println("Existing AES Key loaded from " + keyFilePath);
-            } else {
-                AESFileEncryptor encryptor = new AESFileEncryptor();
-                secretKey = encryptor.generateKey();
-                encryptor.saveKey(keyFilePath);
-                System.out.println("New AES Key generated and saved to " + keyFilePath);
-            }
-
-            // Step 2: 암호화 복호화 테스트
-            AESFileEncryptor encryptor = new AESFileEncryptor(secretKey);
-
-            System.out.println("1. 암호화");
-            System.out.println("2. 복호화");
-            System.out.print(">> ");
-            Scanner sc = new Scanner(System.in);
-            int menu = sc.nextInt();
-            sc.close();
-            
-            if(menu==1) {
-                // txt 암호화
-                encryptor.encryptText(txtPath);
-                System.out.println("Text File encrypted successfully: " + txtPath);
-                // csv 암호화
-                encryptor.encryptCSV(csvPath);
-                System.out.println("CSV File encrypted successfully: " + csvPath);
-            }
-
-            if(menu==2) {
-                // txt 복호화
-                encryptor.decryptText(txtPath);
-                System.out.println("Text File decrypted successfully: " + txtPath);
-                // csv 복호화
-                encryptor.decryptCSV(csvPath);
-                System.out.println("CSV File decrypted successfully: " + csvPath);
-            }
-
-        } catch (Exception e) {
-            System.out.println("Error Msg: " + e.getMessage());
-            e.printStackTrace();
-        }
+        System.out.println("File decrypted successfully: " + filePath);
     }
 }

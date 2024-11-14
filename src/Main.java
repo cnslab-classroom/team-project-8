@@ -14,10 +14,10 @@ public class Main {
             String filePath = "src/test.txt";
 
             // 파일 암호화
-            encryptor.encryptFile(filePath);
+            // encryptor.encryptFile(filePath);
 
             // 파일 복호화
-            //encryptor.decryptFile(filePath);
+            encryptor.decryptFile(filePath);
 
         } catch (FileNotFoundException e) {
             System.out.println("Error: " + e.getMessage());
@@ -29,5 +29,10 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
+
+        //파일 읽기
+        DatabaseManager DB = DatabaseManager.getInstance();
+        DB.ReadCSVFile(".\\src\\test.txt");
+        
     }
 }

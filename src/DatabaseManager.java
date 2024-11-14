@@ -27,16 +27,25 @@ public class DatabaseManager {
             
             System.out.print(text);
 
+            String[] split_text = text.split("\n");
+
+            for (int i = 0; i < split_text.length; i++) {
+                String[] realData = split_text[i].split(",");
+                Data data = new Data(Integer.parseInt(realData[0]), realData[1]);
+                dataList.add(data);
+            }
+
         }catch (IOException e){
             e.printStackTrace();
         }
     }
 
-    public DatabaseManager getInstance() {
+    public static DatabaseManager getInstance() {
         // 싱글톤
+        // !!! 현재 코드는 threadSafe하지 않음.
 
         if (instance == null)
-            instance = this;
+            instance = new DatabaseManager();
         
         return instance;
     }

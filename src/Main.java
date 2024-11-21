@@ -3,6 +3,11 @@ import java.io.FileNotFoundException;
 
 public class Main {
     public static void main(String[] args) {
+
+        LostarkDataCollector.Collector();
+
+        /*
+         
         try {
             // 암호화 키를 저장할 파일 경로
             String keyFilePath = "src/secureKey.txt";
@@ -17,7 +22,7 @@ public class Main {
             // encryptor.encryptFile(filePath);
 
             // 파일 복호화
-            encryptor.decryptFile(filePath);
+            // encryptor.decryptFile(filePath);
 
         } catch (FileNotFoundException e) {
             System.out.println("Error: " + e.getMessage());
@@ -33,6 +38,6 @@ public class Main {
         //파일 읽기
         DatabaseManager DB = DatabaseManager.getInstance();
         DB.ReadCSVFile(".\\src\\test.txt");
-        
+         */
     }
 }

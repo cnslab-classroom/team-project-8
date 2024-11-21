@@ -1,6 +1,9 @@
 package src;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -23,7 +26,8 @@ public class LostarkDataCollector {
 
         try {
             String characterInfo = getCharacterInfo(characterName);
-            System.out.println("캐릭터 정보: " + characterInfo);
+            String serverName = extractServerName(characterInfo); // 서버 이름 추출
+            saveCharacterInfoToServerFolder(serverName, characterName, characterInfo); // 서버별로 저장
         } catch (IOException e) {
             System.err.println("API 요청 중 오류 발생: " + e.getMessage());
         }
@@ -58,5 +62,38 @@ public class LostarkDataCollector {
         // JSONObject jObject = new JSONObject(response);
 
         return response;
+    }
+
+    // 캐릭터 정보를 파일에 저장하는 메서드
+    public static String extractServerName(String characterInfo) {
+        try {
+            // JSON 형식의 데이터를 파싱하여 서버 이름 추출
+            int startIndex = characterInfo.indexOf("\"ServerName\":") + 14; // "ServerName": 뒤의 값
+            int endIndex = characterInfo.indexOf("\"", startIndex);
+            return characterInfo.substring(startIndex, endIndex);
+        } catch (Exception e) {
+            System.err.println("서버 이름 추출 중 오류 발생: " + e.getMessage());
+            return "unknown";
+        }
+    }
+
+    // 서버별 디렉토리에 캐릭터 정보를 저장
+    public static void saveCharacterInfoToServerFolder(String serverName, String characterName, String characterInfo) {
+        String directoryPath = "servers/" + serverName; // 서버별 디렉토리 경로
+        String filePath = directoryPath + "/" + characterName + "_info.json";
+
+        // 디렉토리 생성
+        File directory = new File(directoryPath);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        // 파일 저장
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(characterInfo);
+            System.out.println("캐릭터 정보가 파일에 저장되었습니다: " + filePath);
+        } catch (IOException e) {
+            System.err.println("파일 저장 중 오류 발생: " + e.getMessage());
+        }
     }
 }

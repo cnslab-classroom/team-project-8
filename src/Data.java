@@ -8,4 +8,12 @@ public class Data{
         level = _level;
         name = _name;
     }
+
+    public int getLevel(){
+        return level;
+    }
+    
+    public String getName(){
+        return name;
+    }
 }

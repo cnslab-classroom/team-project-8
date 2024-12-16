@@ -4,50 +4,101 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DatabaseManager {
     private static DatabaseManager instance;
+    private static AESFileEncryptor encryptor;
+    private static final String keyFilePath = "src/secureKey.txt"; // 암호화 키 파일 경로
     
-    private List<CharaData> dataList = new ArrayList<>();
+    List<CharaData> playerDataList = new ArrayList<>(); // 플레이어 데이터를 저장할 리스트
 
     public static DatabaseManager getInstance() {
-        // �̱���
-        // !!! ���� �ڵ�� threadSafe���� ����.
+        // �̱���
+        // !!! ���� �ڵ�� threadSafe���� ����.
 
         if (instance == null)
             instance = new DatabaseManager();
         
         return instance;
     }
-
-    public void ReadPlayerFile(String _fileName) {
-        // _fileName�� player������ �о� dataList�� ����
-        
-        try{
-            BufferedReader br = new BufferedReader(new FileReader(_fileName));
-
-            String text = "";
-            String line;
-            while ((line = br.readLine()) != null) { 
-                text += line + "\n";
-            }
-
-            br.close();
+    
+    public void readSeverFile(String _serverName) {
+        try {
+            encryptor = new AESFileEncryptor(keyFilePath);
             
-            System.out.print(text);
+            // 폴더 내 모든 파일 읽기
+            Files.list(Paths.get("servers/" + _serverName))
+                    .filter(Files::isRegularFile) // 파일만 필터링
+                    .forEach(file -> {
+                        try {
 
-            sortDataByLevel();
-            // printDataList();
+                            // 암호화된 파일 복호화 후 문자열로 읽기
+                            String decryptedData = encryptor.decryptFileToString(file.toString());
 
-        }catch (IOException e){
+                            // 복호화된 데이터를 줄 단위로 처리
+                            String[] lines = decryptedData.split("\n");
+                            for (String line : lines) {
+                                CharaData player = txtToCharaData(line.trim());
+                                if (player != null) {
+                                    playerDataList.add(player);
+                                }
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Failed to decrypt or process file: " + file.getFileName());
+                            e.printStackTrace();
+                        }
+                    });
+        } catch (IOException e) {
+            System.err.println("Error reading folder: " + _serverName);
+        } catch (Exception e) {
+            System.err.println("Failed to Load encryptor");
             e.printStackTrace();
         }
     }
 
+    // 한 줄의 데이터를 파싱하여 CharaData 객체로 변환
+    private static CharaData txtToCharaData(String line) {
+        try {
+            // 데이터 형식 확인 및 추출
+            if (!line.startsWith("Character{") || !line.endsWith("}")) {
+                return null;
+            }
+
+            // 중괄호 내부의 데이터 추출
+            String data = line.substring(line.indexOf('{') + 1, line.lastIndexOf('}'));
+            String[] fields = data.split(", ");
+
+            // 각 필드의 값을 추출
+            Map<String, String> fieldMap = new HashMap<>();
+            for (String field : fields) {
+                String[] keyValue = field.split("=", 2);
+                fieldMap.put(keyValue[0], keyValue.length > 1 ? keyValue[1] : "");
+            }
+
+            // 필드를 기반으로 CharaData 객체 생성
+            return new CharaData(
+                    fieldMap.getOrDefault("ServerName", ""), 
+                    fieldMap.getOrDefault("CharacterName", ""), 
+                    Integer.parseInt(fieldMap.getOrDefault("CharacterLevel", "0")), 
+                    fieldMap.getOrDefault("CharacterClassName", ""), 
+                    fieldMap.getOrDefault("ItemAvgLevel", "0"), 
+                    fieldMap.getOrDefault("ItemMaxLevel", "0")
+            );
+        } catch (Exception e) {
+            System.err.println("Failed to parse line: " + line);
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     public List<CharaData> PlayerDataParser(String jsonString) {
         // Remove leading and trailing brackets
         jsonString = jsonString.trim();
@@ -100,7 +151,7 @@ public class DatabaseManager {
     }
     
     public void sortDataByLevel() {
-        DataSort.sortByLevel(dataList);
+        // DataSort.sortByLevel(dataList);
     }
 
     public boolean isExistPlayer(String _name) {
@@ -109,28 +160,28 @@ public class DatabaseManager {
         for (int i = 0; i < 8; i++) {
             switch (i) {
                 case 0:
-                    serverName = "�����";
+                    serverName = "�����";
                     break;
                 case 1:
-                serverName = "�Ǹ���";
+                serverName = "�Ǹ���";
                     break;
                 case 2:
-                serverName = "�Ƹ�";
+                serverName = "�Ƹ�";
                     break;
                 case 3:
-                serverName = "ī����";
+                serverName = "ī����";
                     break;
                 case 4:
-                serverName = "ī���ν�";
+                serverName = "ī���ν�";
                     break;
                 case 5:
-                serverName = "�ƺ근����";
+                serverName = "�ƺ근����";
                     break;
                 case 6:
-                serverName = "ī��";
+                serverName = "ī��";
                     break;
                 case 7:
-                serverName = "�ϳ���";
+                serverName = "�ϳ���";
                     break;
                 default:
                     System.out.println("error.");

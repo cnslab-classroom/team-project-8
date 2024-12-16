@@ -76,7 +76,7 @@ public class CharaData {
                 ", CharacterClassName='" + CharacterClassName + '\'' +
                 ", ItemAvgLevel='" + ItemAvgLevel + '\'' +
                 ", ItemMaxLevel='" + ItemMaxLevel + '\'' +
-                '}';
+                '}' + '\n';
     }
 
 }

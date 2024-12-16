@@ -4,10 +4,35 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
-        LostarkDataCollector.Collector();
-
+        System.out.println("하고 싶은 행동을 선택해주세요. (숫자 입력, 예시 --- 1)\n");
+        System.out.println("1. 플레이어 검색 2. 랭킹 보기 3. 직업 선호도 보기 4. 종료\n");
         
+        DatabaseManager DB = DatabaseManager.getInstance();
+
+        Scanner sc = new Scanner(System.in, "EUC-KR");
+        String input = sc.nextLine().trim();
+
+        ShowTop show = new ShowTop();
+
+        switch (input) {
+            case "1":
+            LostarkDataCollector.Collector();
+                break;
+            case "2":
+            input = GetServerInput();
+            show.ShowTop100Level(input);
+                break;
+            case "3":
+            input = GetServerInput();
+            show.ShowJobRatio(input);
+                break;
+            case "4":
+            default:
+                System.out.println("유효하지 않은 명령입니다.");
+                return;
+        }
+        
+        /*
          //암호화 및 복호화 코드
         try {
             //암호화 키를 저장할 파일 경로함함
@@ -49,10 +74,21 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
+            */
         
-        //파일 읽기
-        //DatabaseManager DB = DatabaseManager.getInstance();
-        //DB.ReadCSVFile(".\\src\\test.txt");
+    }
+
+    private static String GetServerInput() {
+        Scanner sc = new Scanner(System.in, "EUC-KR");
+
+        System.out.println("로스트 아크 서버를 선택하세요: (서버 이름, 예시 --- 아만)");
+        System.out.println("1. 아만 2. 카마인 3. 루페온 4. 실리안 5. 카제로스 6. 아브렐슈드 7. 니나브 8.카단");
+        String input = sc.nextLine().trim();
         
+        if (input.equals("아만") || input.equals("카마인") || input.equals("루페온") || input.equals("실리안") || 
+        input.equals("카제로스") || input.equals("아브렐슈드") || input.equals("니나브") || input.equals("카단"))
+            return input;
+        else
+            return GetServerInput();
     }
 }

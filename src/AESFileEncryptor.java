@@ -7,18 +7,18 @@ import java.nio.file.Files;
 import java.util.Base64;
 
 public class AESFileEncryptor {
-    private final String keyFilePath; // 암호화 키를 저장할 파일 경로
-    private final SecretKey secretKey; // 고정된 AES 암호화 키
+    private final String keyFilePath;   //암호화 키를 저장할 파일 경로
+    private final SecretKey secretKey;  //고정된 AES 암호화 키
 
-    // 생성자: 암호화 키 파일 경로를 전달받음
+    //생성자: 암호화 키 파일 경로를 전달받음
     public AESFileEncryptor(String keyFilePath) throws Exception {
         this.keyFilePath = keyFilePath;
-        this.secretKey = validateAndSetKey(); // 키 파일 검증 및 설정
+        this.secretKey = validateAndSetKey();   //키 파일 검증 및 설정
     }
 
-    // AES 키 검증 및 설정
+    //AES 키 검증 및 설정
     private SecretKey validateAndSetKey() throws Exception {
-        // 환경변수에서 고정된 키 가져오기
+        //환경변수에서 고정된 키 가져오기
         String fixedKey = System.getenv("ENCRYPTION_KEY");      //환경변수에 고정된 키값 설정해줘야함.
         if (fixedKey == null || fixedKey.length() != 32) {
             throw new IllegalArgumentException("Invalid or missing encryption key in environment variable.");
@@ -26,7 +26,7 @@ public class AESFileEncryptor {
         byte[] fixedKeyBytes = fixedKey.getBytes();
         SecretKey fixedSecretKey = new SecretKeySpec(fixedKeyBytes, "AES");
 
-        // 키 파일 로드
+        //키 파일 로드
         File keyFile = new File(keyFilePath);
         if (!keyFile.exists()) {
             throw new FileNotFoundException("The key file " + keyFilePath + " does not exist.");
@@ -40,10 +40,10 @@ public class AESFileEncryptor {
         }
 
         System.out.println("Encryption key validated and set successfully.");
-        return fixedSecretKey; // 검증된 고정 키를 secretKey로 설정
+        return fixedSecretKey;  //검증된 고정 키를 secretKey로 설정
     }
 
-    // 파일 암호화
+    //파일 암호화
     public void encryptFile(String filePath) throws Exception {
         File file = new File(filePath);
         if (!file.exists()) {
@@ -61,7 +61,7 @@ public class AESFileEncryptor {
         System.out.println("File encrypted successfully: " + filePath);
     }
 
-    // 파일 복호화
+    //파일 복호화
     public void decryptFile(String filePath) throws Exception {
         File file = new File(filePath);
         if (!file.exists()) {

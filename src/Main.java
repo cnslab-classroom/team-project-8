@@ -1,27 +1,30 @@
 package src;
 
+import java.io.*;
+
 public class Main {
     public static void main(String[] args) {
 
         LostarkDataCollector.Collector();
 
         
-         
-        /*try {
-            // 암호화 키를 저장할 파일 경로
+         //암호화 및 복호화 확인용 코드드
+        /*
+        try {
+            //암호화 키를 저장할 파일 경로
             String keyFilePath = "src/secureKey.txt";
 
-            // AESFileEncryptor 객체 생성 (키 파일 검증)
+            //AESFileEncryptor 객체 생성 (키 파일 검증)
             AESFileEncryptor encryptor = new AESFileEncryptor(keyFilePath);
 
-            // 암호화 대상 파일 경로
-            String filePath = "src/test.txt";
+            //암호화 대상 파일 경로
+            String filePath = "servers\\카제로스\\JirenSpEaR_info.txt";
 
-            // 파일 암호화
-            // encryptor.encryptFile(filePath);
+            //파일 암호화
+            encryptor.encryptFile(filePath);
 
-            // 파일 복호화
-            // encryptor.decryptFile(filePath);
+            //파일 복호화
+            //encryptor.decryptFile(filePath);
 
         } catch (FileNotFoundException e) {
             System.out.println("Error: " + e.getMessage());
@@ -33,10 +36,11 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
+        */
 
         //파일 읽기
-        DatabaseManager DB = DatabaseManager.getInstance();
-        DB.ReadCSVFile(".\\src\\test.txt");
-        */
+        //DatabaseManager DB = DatabaseManager.getInstance();
+        //DB.ReadCSVFile(".\\src\\test.txt");
+        
     }
 }

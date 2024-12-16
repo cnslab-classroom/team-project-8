@@ -87,7 +87,7 @@ public class LostarkDataCollector {
     // 암호화된 캐릭터 정보를 서버별 디렉토리에 저장하는 메서드
     public static void saveEncryptedCharacterInfoToServerFolder(String serverName, String characterName, String characterInfo) {
         String directoryPath = "servers/" + serverName; // 서버별 디렉토리 경로
-        String filePath = directoryPath + "/" + characterName + "_info.json";
+        String filePath = directoryPath + "/" + characterName + "_info.txt";
 
         // 디렉토리 생성
         File directory = new File(directoryPath);
@@ -107,7 +107,7 @@ public class LostarkDataCollector {
     // 암호화된 캐릭터 정보를 복호화하여 반환하는 메서드
     public static String decryptCharacterInfoFromServerFolder(String serverName, String characterName) throws Exception {
         String directoryPath = "servers/" + serverName; // 서버별 디렉토리 경로
-        String filePath = directoryPath + "/" + characterName + "_info.json";
+        String filePath = directoryPath + "/" + characterName + "_info.txt";
         
         // 파일 복호화
         return encryptor.decryptFileToString(filePath);

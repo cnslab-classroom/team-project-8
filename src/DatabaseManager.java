@@ -1,19 +1,31 @@
 package src;
 
-
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DatabaseManager {
     private static DatabaseManager instance;
     
-    private List<Data> dataList = new ArrayList<>();
+    private List<CharaData> dataList = new ArrayList<>();
 
-    public void ReadCSVFile(String _fileName) {
-        // _fileNameì˜ csvíŒŒì¼ì„ ì½ì–´ dataListì— ì €ì¥
+    public static DatabaseManager getInstance() {
+        // ½Ì±ÛÅæ
+        // !!! ÇöÀç ÄÚµå´Â threadSafeÇÏÁö ¾ÊÀ½.
+
+        if (instance == null)
+            instance = new DatabaseManager();
+        
+        return instance;
+    }
+
+    public void ReadPlayerFile(String _fileName) {
+        // _fileNameÀÇ playerÆÄÀÏÀ» ÀĞ¾î dataList¿¡ ÀúÀå
         
         try{
             BufferedReader br = new BufferedReader(new FileReader(_fileName));
@@ -27,44 +39,111 @@ public class DatabaseManager {
             br.close();
             
             System.out.print(text);
-            String[] split_text = text.split("\n");
-
-            for (int i = 0; i < split_text.length; i++) {
-                String[] realData = split_text[i].split(",");
-                Data data = new Data(Integer.parseInt(realData[0]), realData[1]);
-                dataList.add(data);
-            }
 
             sortDataByLevel();
-            printDataList();
+            // printDataList();
 
         }catch (IOException e){
             e.printStackTrace();
         }
-
-
     }
 
-    public static DatabaseManager getInstance() {
-        // ì‹±ê¸€í†¤
-        // !!! í˜„ì¬ ì½”ë“œëŠ” threadSafeí•˜ì§€ ì•ŠìŒ.
+    public List<CharaData> PlayerDataParser(String jsonString) {
+        // Remove leading and trailing brackets
+        jsonString = jsonString.trim();
+        if (jsonString.startsWith("[")) {
+            jsonString = jsonString.substring(1);
+        }
+        if (jsonString.endsWith("]")) {
+            jsonString = jsonString.substring(0, jsonString.length() - 1);
+        }
 
-        if (instance == null)
-            instance = new DatabaseManager();
-        
-        return instance;
+        // Split into individual JSON objects
+        String[] objects = jsonString.split("}");
+        List<CharaData> result = new ArrayList<>();
+
+        for (String object : objects) {
+            // Clean up each object and split into key-value pairs
+            object = object.trim();
+            if (object.startsWith("{")) {
+                object = object.substring(1);
+            }
+            if (object.endsWith("}")) {
+                object = object.substring(0, object.length() - 1);
+            }
+
+            // Parse key-value pairs
+            String[] pairs = object.split(",");
+            Map<String, String> map = new HashMap<>();
+            for (String pair : pairs) {
+                String[] keyValue = pair.split(":");
+                if (keyValue.length == 2) {
+                    String key = keyValue[0].trim().replaceAll("\\\"", "");
+                    String value = keyValue[1].trim().replaceAll("\\\"", "");
+                    map.put(key, value);
+                }
+            }
+
+            // Map to CharaData
+            String serverName = map.getOrDefault("ServerName", "");
+            String characterName = map.getOrDefault("CharacterName", "");
+            int characterLevel = Integer.parseInt(map.getOrDefault("CharacterLevel", "0"));
+            String characterClassName = map.getOrDefault("CharacterClassName", "");
+            String itemAvgLevel = map.getOrDefault("ItemAvgLevel", "");
+            String itemMaxLevel = map.getOrDefault("ItemMaxLevel", "");
+
+            result.add(new CharaData(serverName, characterName, characterLevel, characterClassName, itemAvgLevel, itemMaxLevel));
+        }
+
+        return result;
+
     }
     
     public void sortDataByLevel() {
         DataSort.sortByLevel(dataList);
     }
 
-    public void printDataList(){
-        int rank = 1;
-        for(Data data: dataList){
-            System.out.println("Ranking" + rank + ": " +  "Name : " + data.getName() + " " + "Level : " + data.getLevel());
-            rank++;
-        }
-    }
+    public boolean isExistPlayer(String _name) {
+        String serverName = "";
+        
+        for (int i = 0; i < 8; i++) {
+            switch (i) {
+                case 0:
+                    serverName = "·çÆä¿Â";
+                    break;
+                case 1:
+                serverName = "½Ç¸®¾È";
+                    break;
+                case 2:
+                serverName = "¾Æ¸¸";
+                    break;
+                case 3:
+                serverName = "Ä«¸¶ÀÎ";
+                    break;
+                case 4:
+                serverName = "Ä«Á¦·Î½º";
+                    break;
+                case 5:
+                serverName = "¾Æºê·¼½´µå";
+                    break;
+                case 6:
+                serverName = "Ä«´Ü";
+                    break;
+                case 7:
+                serverName = "´Ï³ªºê";
+                    break;
+                default:
+                    System.out.println("error.");
+                    break;
+            }
 
+            String filePath = "servers/" + serverName + "/" + _name + "_info.txt";
+            
+            File file = new File(filePath);
+            if (file.exists())
+            return true;
+
+        }
+        return false;
+    }
 }

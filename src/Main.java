@@ -1,6 +1,6 @@
 package src;
 
-import java.io.*;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -8,8 +8,7 @@ public class Main {
         LostarkDataCollector.Collector();
 
         
-         //암호화 및 복호화 확인용 코드드
-        /*
+         //암호화 및 복호화 확인용 코드
         try {
             //암호화 키를 저장할 파일 경로
             String keyFilePath = "src/secureKey.txt";
@@ -18,17 +17,31 @@ public class Main {
             AESFileEncryptor encryptor = new AESFileEncryptor(keyFilePath);
 
             //암호화 대상 파일 경로
-            String filePath = "servers\\카제로스\\JirenSpEaR_info.txt";
+            String filePath = "servers\\猷⑦럹�삩\\정지훈_info.txt";
 
-            //파일 암호화
-            encryptor.encryptFile(filePath);
+            Scanner scanner = new Scanner(System.in);
 
-            //파일 복호화
-            //encryptor.decryptFile(filePath);
-
-        } catch (FileNotFoundException e) {
-            System.out.println("Error: " + e.getMessage());
-            System.out.println("Please ensure the key file exists before running the program.");
+            System.out.println("명령을 입력하세요 (암호화, 복호화, 종료): ");
+            String input = scanner.nextLine().trim(); // 사용자 입력 받기 및 공백 제거
+    
+            switch (input) {
+                case "암호화":
+                    System.out.println("암호화를 수행합니다.");
+                    encryptor.encryptFile(filePath);
+                    break;
+                case "복호화":
+                    System.out.println("복호화를 수행합니다.");
+                    // 복호화 로직 호출
+                    encryptor.decryptFile(filePath);
+                    break;
+                case "종료":
+                    System.out.println("프로그램을 종료합니다.");
+                    return;
+                default:
+                    System.out.println("유효하지 않은 명령입니다.");
+                    break;
+            }
+            
         } catch (SecurityException e) {
             System.out.println("Error: " + e.getMessage());
             System.out.println("The key file does not match the fixed encryption key.");
@@ -36,8 +49,7 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
-        */
-
+        
         //파일 읽기
         //DatabaseManager DB = DatabaseManager.getInstance();
         //DB.ReadCSVFile(".\\src\\test.txt");

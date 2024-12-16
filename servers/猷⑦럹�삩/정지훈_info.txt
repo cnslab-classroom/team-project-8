@@ -1,0 +1,17 @@
+Character{ServerName='ë£¨í˜?˜¨', CharacterName='?ŒŒ?‹¥?ŒŒ?‹­?ŒŒ?‹¥', CharacterLevel=59, CharacterClassName='ê±´ìŠ¬ë§ì–´', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='?„ˆ?„?™”ê°??—„ì²?ë§ë„¤', CharacterLevel=60, CharacterClassName='?„?™”ê°?', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='?›”?„¸', CharacterLevel=60, CharacterClassName='??ë¦¬ë‚˜?´?Š¸', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='ë¯¼íŠ¸ì´ˆì½”ë¨¹ëŠ”ëª¨ì½”ì½?', CharacterLevel=60, CharacterClassName='?›Œë¡œë“œ', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='ë©ë•Œë¦¬ëŠ”ëª¨ì½”ì½?', CharacterLevel=60, CharacterClassName='?Š¤?Š¸?¼?´ì»?', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='?—”? ¤ëª?', CharacterLevel=63, CharacterClassName='?„œë¨¸ë„ˆ', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='?›?ƒœë¯?', CharacterLevel=64, CharacterClassName='ê±´ìŠ¬ë§ì–´', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='2020?…„6?›”18?¼', CharacterLevel=63, CharacterClassName='ê±´ìŠ¬ë§ì–´', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='?´? •?„ë©´ì•Œ?•„ì¤„ë§Œ?•˜?–?•„', CharacterLevel=63, CharacterClassName='ê±´ìŠ¬ë§ì–´', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='?•‘?¬?•‘?¬?•‘?¬?•‘?¬', CharacterLevel=60, CharacterClassName='ì°½ìˆ ?‚¬', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='?˜¼?£ë§?', CharacterLevel=64, CharacterClassName='ê±´ìŠ¬ë§ì–´', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='?›„?‹¤?‹¤?‹«', CharacterLevel=10, CharacterClassName='?†Œ?š¸?´?„°', ItemAvgLevel='50.00', ItemMaxLevel='50.00'}
+Character{ServerName='', CharacterName='êµ½ë„¤?Š”ë³¼ì??´?…¸', CharacterLevel=65, CharacterClassName='ê±´ìŠ¬ë§ì–´', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='?’‹ê³ ì¶”', CharacterLevel=58, CharacterClassName='ê±´ìŠ¬ë§ì–´', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='ê³ ê³ ?•™ë§ê³ ?Š¤?†±?Š¤?†±?•™', CharacterLevel=64, CharacterClassName='ê±´ìŠ¬ë§ì–´', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='????—?˜¹', CharacterLevel=64, CharacterClassName='ê±´ìŠ¬ë§ì–´', ItemAvgLevel='1', ItemMaxLevel='1'}
+Character{ServerName='', CharacterName='? •ì§??›ˆ', CharacterLevel=62, CharacterClassName='ê±´ìŠ¬ë§ì–´', ItemAvgLevel='1', ItemMaxLevel='1'}

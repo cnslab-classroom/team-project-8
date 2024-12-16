@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Scanner;
 
 public class LostarkDataCollector {
@@ -17,7 +18,6 @@ public class LostarkDataCollector {
 
         Scanner sc = new Scanner(System.in, "EUC-KR");
         String characterName = sc.next();
-        System.out.println(characterName);
         sc.nextLine(); // 버퍼 삭제
 
         try {
@@ -26,14 +26,26 @@ public class LostarkDataCollector {
 
             // 캐릭터 정보 조회
             String characterInfo = getCharacterInfo(characterName);
+
+            DatabaseManager DB = DatabaseManager.getInstance();
+
+            List<CharaData> charaData = DB.PlayerDataParser(characterInfo);
+
             String serverName = extractServerName(characterInfo); // 서버 이름 추출
             
+            String info = "";
+            for (int i = 0; i < charaData.size(); i++) {
+                info += charaData.get(i).toString();
+                info += "\n";
+
+            }
+
             // 암호화된 캐릭터 정보 저장
-            saveEncryptedCharacterInfoToServerFolder(serverName, characterName, characterInfo); // 서버별로 저장
+            saveEncryptedCharacterInfoToServerFolder(serverName, characterName, info); // 서버별로 저장
             
             // 암호화된 파일을 복호화하여 확인
-            String decryptedInfo = decryptCharacterInfoFromServerFolder(serverName, characterName);
-            System.out.println("복호화된 캐릭터 정보: " + decryptedInfo);
+            // String decryptedInfo = decryptCharacterInfoFromServerFolder(serverName, characterName);
+            // System.out.println("복호화된 캐릭터 정보: " + decryptedInfo);
 
         } catch (IOException e) {
             System.err.println("API 요청 중 오류 발생: " + e.getMessage());

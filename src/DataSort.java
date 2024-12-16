@@ -5,11 +5,11 @@ import java.util.Comparator;
 import java.util.List;
 
 public class DataSort {
-    public static void sortByLevel(List<Data> dataList) {
-        Collections.sort(dataList, new Comparator<Data>() {
+    public static void sortByLevel(List<CharaData> dataList) {
+        Collections.sort(dataList, new Comparator<CharaData>() {
             @Override
-            public int compare(Data d1, Data d2) {
-                return Integer.compare(d2.getLevel(), d1.getLevel());
+            public int compare(CharaData d1, CharaData d2) {
+                return Integer.compare(d2.getCharacterLevel(), d1.getCharacterLevel());
             }
         });
     }

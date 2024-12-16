@@ -1,14 +1,13 @@
 package src;
-import java.io.FileNotFoundException;
 
 public class Main {
     public static void main(String[] args) {
 
         LostarkDataCollector.Collector();
 
-        /*
+        
          
-        try {
+        /*try {
             // 암호화 키를 저장할 파일 경로
             String keyFilePath = "src/secureKey.txt";
 
@@ -38,6 +37,6 @@ public class Main {
         //파일 읽기
         DatabaseManager DB = DatabaseManager.getInstance();
         DB.ReadCSVFile(".\\src\\test.txt");
-         */
+        */
     }
 }

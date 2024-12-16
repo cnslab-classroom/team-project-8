@@ -79,7 +79,7 @@ public class AESFileEncryptor {
         System.out.println("File decrypted successfully: " + filePath);
     }
 
-    // 문자열 암호화 후 파일로 저장
+    //문자열 암호화 후 파일로 저장
     public void encryptStringToFile(String data, String filePath) throws Exception {
         byte[] dataBytes = data.getBytes();
         Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
@@ -92,7 +92,7 @@ public class AESFileEncryptor {
         System.out.println("Encrypted string data saved to: " + filePath);
     }
 
-    // 암호화된 파일을 복호화하여 문자열로 반환
+    //암호화된 파일을 복호화하여 문자열로 반환
     public String decryptFileToString(String filePath) throws Exception {
         File file = new File(filePath);
         if (!file.exists()) {

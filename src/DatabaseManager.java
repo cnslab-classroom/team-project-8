@@ -21,8 +21,8 @@ public class DatabaseManager {
     List<CharaData> playerDataList = new ArrayList<>(); // 플레이어 데이터를 저장할 리스트
 
     public static DatabaseManager getInstance() {
-        // �̱���
-        // !!! ���� �ڵ�� threadSafe���� ����.
+        //
+        // 
 
         if (instance == null)
             instance = new DatabaseManager();

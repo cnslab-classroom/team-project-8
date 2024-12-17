@@ -6,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
         while(true) {
             try {
-                System.out.println("메뉴를 선택하세요요.(입력 예시 >> 1)");
+                System.out.println("메뉴를 선택하세요.(입력 예시 >> 1)");
                 System.out.println("[1].랭킹 보기 // [2].직업 선호도 보기 // [3].플레이어 검색 및 추가 // [4].종료");
                 System.out.print(">> ");
                 
@@ -50,9 +50,9 @@ public class Main {
                 e.printStackTrace();
             }
         }
-        /*
+        
          //암호화 및 복호화 코드
-        try {
+        /*try {
             //암호화 키를 저장할 파일 경로함함
             String keyFilePath = "src/secureKey.txt";
 
@@ -60,7 +60,7 @@ public class Main {
             AESFileEncryptor encryptor = new AESFileEncryptor(keyFilePath);
 
             //암호화 대상 파일 경로
-            String filePath = "servers\\루페온\\박요한_info.txt";
+            String filePath = "servers\\아만\\김시끄_info.txt";
 
             Scanner scanner = new Scanner(System.in);
 
@@ -74,7 +74,6 @@ public class Main {
                     break;
                 case "decrypt":
                     System.out.println("복호화를 수행합니다.");
-                    // 복호화 로직 호출
                     encryptor.decryptFile(filePath);
                     break;
                 case "exit":
@@ -84,7 +83,14 @@ public class Main {
                     System.out.println("유효하지 않은 명령입니다.");
                     break;
             }
-            */  
+        } catch (SecurityException e) {
+            System.out.println("Error: " + e.getMessage());
+            System.out.println("The key file does not match the fixed encryption key.");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        */
     }
 
     private static String GetServerInput() {

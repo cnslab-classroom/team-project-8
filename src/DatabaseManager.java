@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class DatabaseManager {
@@ -30,40 +31,45 @@ public class DatabaseManager {
         return instance;
     }
     
-    public void readSeverFile(String _serverName) {
-        try {
-            encryptor = new AESFileEncryptor(keyFilePath);
-            
-            // 폴더 내 모든 파일 읽기
-            Files.list(Paths.get("servers/" + _serverName))
-                    .filter(Files::isRegularFile) // 파일만 필터링
-                    .forEach(file -> {
-                        try {
+    public boolean readServerFile(String _serverName) {
+    AtomicBoolean isSuccess = new AtomicBoolean(true); // AtomicBoolean 사용
 
-                            // 암호화된 파일 복호화 후 문자열로 읽기
-                            String decryptedData = encryptor.decryptFileToString(file.toString());
+    try {
+        encryptor = new AESFileEncryptor(keyFilePath);
 
-                            // 복호화된 데이터를 줄 단위로 처리
-                            String[] lines = decryptedData.split("\n");
-                            for (String line : lines) {
-                                CharaData player = txtToCharaData(line.trim());
-                                if (player != null) {
-                                    playerDataList.add(player);
-                                }
+        // 폴더 내 모든 파일 읽기
+        Files.list(Paths.get("servers/" + _serverName))
+                .filter(Files::isRegularFile) // 파일만 필터링
+                .forEach(file -> {
+                    try {
+                        // 암호화된 파일 복호화 후 문자열로 읽기
+                        String decryptedData = encryptor.decryptFileToString(file.toString());
+
+                        // 복호화된 데이터를 줄 단위로 처리
+                        String[] lines = decryptedData.split("\n");
+                        for (String line : lines) {
+                            CharaData player = txtToCharaData(line.trim());
+                            if (player != null) {
+                                playerDataList.add(player);
                             }
-                        } catch (Exception e) {
-                            System.err.println("Failed to decrypt or process file: " + file.getFileName());
-                            e.printStackTrace();
                         }
-                    });
-        } catch (IOException e) {
-            System.err.println("Error reading folder: " + _serverName);
-        } catch (Exception e) {
-            System.err.println("Failed to Load encryptor");
-            e.printStackTrace();
-        }
+                    } catch (Exception e) {
+                        System.err.println("Failed to decrypt or process file: " + file.getFileName());
+                        e.printStackTrace();
+                        isSuccess.set(false);
+                    }
+                });
+    } catch (IOException e) {
+        System.err.println("Error reading folder: " + _serverName);
+        isSuccess.set(false);
+    } catch (Exception e) {
+        System.err.println("Failed to Load encryptor");
+        e.printStackTrace();
+        isSuccess.set(false);
     }
 
+    return isSuccess.get(); // 성공 여부 반환
+}
     // 한 줄의 데이터를 파싱하여 CharaData 객체로 변환
     private static CharaData txtToCharaData(String line) {
         try {

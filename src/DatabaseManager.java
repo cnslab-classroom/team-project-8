@@ -36,6 +36,7 @@ public class DatabaseManager {
 
     try {
         encryptor = new AESFileEncryptor(keyFilePath);
+        playerDataList.clear();
 
         // 폴더 내 모든 파일 읽기
         Files.list(Paths.get("servers/" + _serverName))

@@ -1,5 +1,0 @@
-Character{ServerName='루페온', CharacterName='이사현', CharacterLevel=50, CharacterClassName='바드', ItemAvgLevel='1', ItemMaxLevel='1'}
-Character{ServerName='', CharacterName='박월향', CharacterLevel=53, CharacterClassName='스트라이커', ItemAvgLevel='1', ItemMaxLevel='1'}
-Character{ServerName='', CharacterName='이미율', CharacterLevel=56, CharacterClassName='건슬링어', ItemAvgLevel='1', ItemMaxLevel='1'}
-Character{ServerName='', CharacterName='박요한', CharacterLevel=58, CharacterClassName='홀리나이트', ItemAvgLevel='1', ItemMaxLevel='1'}
-Character{ServerName='', CharacterName='이신혜', CharacterLevel=54, CharacterClassName='인파이터', ItemAvgLevel='648.00', ItemMaxLevel='648.00'}

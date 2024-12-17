@@ -4,34 +4,52 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("하고 싶은 행동을 선택해주세요. (숫자 입력, 예시 --- 1)\n");
-        System.out.println("1. 플레이어 검색 2. 랭킹 보기 3. 직업 선호도 보기 4. 종료\n");
-        
-        DatabaseManager DB = DatabaseManager.getInstance();
+        while(true) {
+            try {
+                System.out.println("메뉴를 선택하세요요.(입력 예시 >> 1)");
+                System.out.println("[1].랭킹 보기 // [2].직업 선호도 보기 // [3].플레이어 검색 및 추가 // [4].종료");
+                System.out.print(">> ");
+                
+                DatabaseManager DB = DatabaseManager.getInstance();
 
-        Scanner sc = new Scanner(System.in, "EUC-KR");
-        String input = sc.nextLine().trim();
+                Scanner sc = new Scanner(System.in, "EUC-KR");
+                String input = sc.nextLine().trim();
 
-        ShowTop show = new ShowTop();
+                ShowTop show = new ShowTop();
 
-        switch (input) {
-            case "1":
-            LostarkDataCollector.Collector();
-                break;
-            case "2":
-            input = GetServerInput();
-            show.ShowTop100Level(input);
-                break;
-            case "3":
-            input = GetServerInput();
-            show.ShowJobRatio(input);
-                break;
-            case "4":
-            default:
-                System.out.println("유효하지 않은 명령입니다.");
-                return;
+                System.out.println("");
+                switch (input) {
+                    case "1":
+                        input = GetServerInput();
+                        show.ShowTop100Level(input);
+                        System.out.println("");
+                        break;
+                    case "2":
+                        input = GetServerInput();
+                        show.ShowJobRatio(input);
+                        System.out.println("");
+                        break;
+                    case "3":
+                        LostarkDataCollector.Collector();
+                        System.out.println("");
+                        break;
+                    case "4":
+                        System.out.println("프로그램을 종료합니다...");
+                        System.out.println("");
+                        return;
+                    default:
+                        System.out.println("유효하지 않은 입력입니다...");
+                        System.out.println("");
+                        break;
+                }
+            } catch (SecurityException e) {
+                System.out.println("Error: " + e.getMessage());
+                System.out.println("The key file does not match the fixed encryption key.");
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+                e.printStackTrace();
+            }
         }
-        
         /*
          //암호화 및 복호화 코드
         try {
@@ -66,29 +84,24 @@ public class Main {
                     System.out.println("유효하지 않은 명령입니다.");
                     break;
             }
-            
-        } catch (SecurityException e) {
-            System.out.println("Error: " + e.getMessage());
-            System.out.println("The key file does not match the fixed encryption key.");
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-            e.printStackTrace();
-        }
-            */
-        
+            */  
     }
 
     private static String GetServerInput() {
         Scanner sc = new Scanner(System.in, "EUC-KR");
 
-        System.out.println("로스트 아크 서버를 선택하세요: (서버 이름, 예시 --- 아만)");
-        System.out.println("1. 아만 2. 카마인 3. 루페온 4. 실리안 5. 카제로스 6. 아브렐슈드 7. 니나브 8.카단");
+        System.out.println("로스트 아크 서버를 선택하세요.(입력 예시 >> 아만)");
+        System.out.println("[1].아만 [2].카마인 [3].루페온 [4].실리안 [5].카제로스 [6].아브렐슈드 [7].니나브 [8].카단");
+        System.out.print(">> ");
         String input = sc.nextLine().trim();
         
         if (input.equals("아만") || input.equals("카마인") || input.equals("루페온") || input.equals("실리안") || 
         input.equals("카제로스") || input.equals("아브렐슈드") || input.equals("니나브") || input.equals("카단"))
             return input;
-        else
+        else {
+            System.out.println("Error: 서버 이름을 다시 입력해주세요.");
+            System.out.println("");
             return GetServerInput();
+        }
     }
 }

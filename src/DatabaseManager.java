@@ -160,28 +160,28 @@ public class DatabaseManager {
         for (int i = 0; i < 8; i++) {
             switch (i) {
                 case 0:
-                    serverName = "�����";
+                    serverName = "아만";
                     break;
                 case 1:
-                serverName = "�Ǹ���";
+                serverName = "카마인";
                     break;
                 case 2:
-                serverName = "�Ƹ�";
+                serverName = "루페온";
                     break;
                 case 3:
-                serverName = "ī����";
+                serverName = "실리안";
                     break;
                 case 4:
-                serverName = "ī���ν�";
+                serverName = "카제로스";
                     break;
                 case 5:
-                serverName = "�ƺ근����";
+                serverName = "아브렐슈드";
                     break;
                 case 6:
-                serverName = "ī��";
+                serverName = "니나브";
                     break;
                 case 7:
-                serverName = "�ϳ���";
+                serverName = "카단";
                     break;
                 default:
                     System.out.println("error.");

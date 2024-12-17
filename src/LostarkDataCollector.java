@@ -14,7 +14,8 @@ public class LostarkDataCollector {
     private static AESFileEncryptor encryptor;
 
     public static void Collector() {
-        System.out.println("조회하고 싶은 캐릭터 이름을 입력해주세요.\n");
+        System.out.println("조회하고 싶은 캐릭터 이름을 입력해주세요.");
+        System.out.print(">> ");
 
         Scanner sc = new Scanner(System.in, "EUC-KR");
         String characterName = sc.next();
